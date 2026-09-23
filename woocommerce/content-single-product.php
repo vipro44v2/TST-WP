@@ -1,5 +1,9 @@
 <?php
 defined( 'ABSPATH' ) || exit;
+
+if ( ! class_exists( 'WooCommerce' ) ) {
+    return;
+}
 ?>
 <article class="tst-product-layout">
   <div class="tst-product-gallery">

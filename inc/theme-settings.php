@@ -25,6 +25,10 @@ function tst_settings_init() {
 add_action( 'admin_init', 'tst_settings_init' );
 
 function tst_sanitize_settings( $input ) {
+    if ( ! is_array( $input ) ) {
+        return array();
+    }
+
     $out = array();
 
     $text_keys = array(
@@ -79,6 +83,11 @@ function tst_sanitize_settings( $input ) {
 
 function tst_settings_page() {
     $settings = get_option( 'tst_settings', array() );
+
+    if ( ! is_array( $settings ) ) {
+        $settings = array();
+    }
+
     $text_fields = array(
         'container_width'  => 'Container width',
         'logo_width'       => 'Logo width',

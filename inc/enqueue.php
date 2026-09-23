@@ -8,7 +8,7 @@ function tst_enqueue_assets() {
     wp_enqueue_style( 'tst-style', get_stylesheet_uri(), array(), TST_VERSION );
     wp_enqueue_script( 'tst-main', TST_URI . '/assets/js/main.js', array(), TST_VERSION, true );
 
-    if ( is_front_page() ) {
+    if ( is_front_page() && class_exists( 'WooCommerce' ) ) {
         wp_enqueue_style(
             'tst-product-tabs-slider',
             TST_URI . '/assets/css/components/product-tabs-slider.css',

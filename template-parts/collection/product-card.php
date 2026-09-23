@@ -1,7 +1,15 @@
 <?php
+if (
+    ! class_exists( 'WooCommerce' ) ||
+    ! class_exists( 'WC_Product' ) ||
+    ! function_exists( 'wc_get_product' )
+) {
+    return;
+}
+
 $product = $args['product'] ?? wc_get_product( get_the_ID() );
 
-if ( ! $product ) {
+if ( ! ( $product instanceof WC_Product ) ) {
     return;
 }
 ?>

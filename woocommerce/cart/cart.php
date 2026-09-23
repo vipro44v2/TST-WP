@@ -1,6 +1,25 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
+if (
+    ! class_exists( 'WooCommerce' ) ||
+    ! class_exists( 'WC_Product' ) ||
+    ! function_exists( 'WC' ) ||
+    ! function_exists( 'wc_get_cart_url' ) ||
+    ! function_exists( 'wc_get_cart_remove_url' ) ||
+    ! function_exists( 'wc_get_formatted_cart_item_data' )
+) {
+    return;
+}
+
+$tst_woocommerce = WC();
+
+if ( ! $tst_woocommerce || ! isset( $tst_woocommerce->cart ) ) {
+    return;
+}
+
+$tst_cart = $tst_woocommerce->cart;
+
 get_header( 'shop' );
 ?>
 <div class="tst-container tst-content">
@@ -10,11 +29,18 @@ get_header( 'shop' );
     <div class="tst-cart-layout">
       <div class="tst-cart-main">
         <div class="tst-cart-table">
-          <?php foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) : ?>
+          <?php foreach ( $tst_cart->get_cart() as $cart_item_key => $cart_item ) : ?>
             <?php
-            $_product = $cart_item['data'];
+            if ( ! is_array( $cart_item ) ) {
+                continue;
+            }
 
-            if ( ! $_product || ! $_product->exists() ) {
+            $_product = $cart_item['data'] ?? null;
+            $quantity = isset( $cart_item['quantity'] )
+                ? absint( $cart_item['quantity'] )
+                : 1;
+
+            if ( ! ( $_product instanceof WC_Product ) || ! $_product->exists() ) {
                 continue;
             }
             ?>
@@ -26,20 +52,20 @@ get_header( 'shop' );
                 <a href="<?php echo esc_url( $_product->get_permalink( $cart_item ) ); ?>">
                   <?php echo esc_html( $_product->get_name() ); ?>
                 </a>
-                <p><?php echo wp_kses_post( WC()->cart->get_product_price( $_product ) ); ?></p>
+                <p><?php echo wp_kses_post( $tst_cart->get_product_price( $_product ) ); ?></p>
               </div>
               <div class="tst-qty">
                 <input
                   type="number"
                   min="1"
                   name="cart[<?php echo esc_attr( $cart_item_key ); ?>][qty]"
-                  value="<?php echo esc_attr( $cart_item['quantity'] ); ?>"
+                  value="<?php echo esc_attr( $quantity ); ?>"
                 >
               </div>
               <div>
                 <?php
                 echo wp_kses_post(
-                    WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] )
+                    $tst_cart->get_product_subtotal( $_product, $quantity )
                 );
                 ?>
               </div>

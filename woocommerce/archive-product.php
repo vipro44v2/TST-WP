@@ -1,6 +1,15 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
+if (
+    ! class_exists( 'WooCommerce' ) ||
+    ! function_exists( 'woocommerce_product_loop' ) ||
+    ! function_exists( 'woocommerce_page_title' ) ||
+    ! function_exists( 'wc_get_template_part' )
+) {
+    return;
+}
+
 get_header( 'shop' );
 ?>
 <div class="tst-container tst-content">

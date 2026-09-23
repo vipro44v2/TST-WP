@@ -2,6 +2,18 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
+
+$tst_has_woocommerce = class_exists( 'WooCommerce' );
+$tst_account_url     = wp_login_url();
+$tst_cart_url        = home_url( '/' );
+
+if ( $tst_has_woocommerce && function_exists( 'wc_get_page_permalink' ) ) {
+    $tst_account_url = wc_get_page_permalink( 'myaccount' );
+}
+
+if ( $tst_has_woocommerce && function_exists( 'wc_get_cart_url' ) ) {
+    $tst_cart_url = wc_get_cart_url();
+}
 ?>
 <!doctype html>
 <html <?php language_attributes(); ?>>
@@ -45,10 +57,12 @@ if ( ! defined( 'ABSPATH' ) ) {
     </nav>
 
     <div class="tst-header__actions">
-      <a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>">Account</a>
-      <a href="<?php echo esc_url( wc_get_cart_url() ); ?>">
-        Cart (<span class="tst-cart-count"><?php echo esc_html( tst_cart_count() ); ?></span>)
-      </a>
+      <a href="<?php echo esc_url( $tst_account_url ); ?>">Account</a>
+      <?php if ( $tst_has_woocommerce && function_exists( 'wc_get_cart_url' ) ) : ?>
+        <a href="<?php echo esc_url( $tst_cart_url ); ?>">
+          Cart (<span class="tst-cart-count"><?php echo esc_html( tst_cart_count() ); ?></span>)
+        </a>
+      <?php endif; ?>
       <button class="tst-menu-toggle" type="button" aria-expanded="false">Menu</button>
     </div>
   </div>

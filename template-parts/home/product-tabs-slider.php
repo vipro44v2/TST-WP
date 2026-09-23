@@ -1,5 +1,15 @@
 <?php
+if (
+    ! class_exists( 'WooCommerce' ) ||
+    ! function_exists( 'wc_get_products' )
+) {
+    return;
+}
+
 $limit = max( 2, absint( tst_get_setting( 'tabs_products_per_tab', 8 ) ) );
+$shop_url = function_exists( 'wc_get_page_permalink' )
+    ? wc_get_page_permalink( 'shop' )
+    : home_url( '/' );
 $groups = array(
     'new'  => wc_get_products(
         array(
@@ -42,7 +52,7 @@ $groups = array(
       </div>
       <a
         class="tst-product-tabs__more"
-        href="<?php echo esc_url( tst_get_setting( 'tabs_more_url', wc_get_page_permalink( 'shop' ) ) ); ?>"
+        href="<?php echo esc_url( tst_get_setting( 'tabs_more_url', $shop_url ) ); ?>"
       >Xem thêm →</a>
     </div>
 
