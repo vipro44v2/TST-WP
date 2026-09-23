@@ -1,0 +1,52 @@
+.tst-announcement {
+  padding: 8px;
+  background: var(--tst-primary);
+  color: #fff;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.tst-header {
+  border-bottom: 1px solid var(--tst-border);
+  background: #fff;
+}
+
+.tst-header__inner {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  min-height: 76px;
+}
+
+.tst-header__logo {
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.tst-header__logo img {
+  width: auto;
+  max-height: 44px;
+}
+
+.tst-header__nav {
+  flex: 1;
+}
+
+.tst-header__nav ul {
+  display: flex;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tst-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 0.9rem;
+}
+
+.tst-menu-toggle {
+  display: none;
+}

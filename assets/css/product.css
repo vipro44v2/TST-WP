@@ -1,0 +1,30 @@
+.tst-product-layout {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 64px;
+}
+
+.tst-product-info {
+  padding-top: 20px;
+}
+
+.tst-product-info .price {
+  font-size: 1.4rem;
+}
+
+.tst-product-gallery .woocommerce-product-gallery {
+  width: 100% !important;
+}
+
+.tst-single-product .related {
+  margin-top: 64px;
+}
+
+.tst-single-product .related ul {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

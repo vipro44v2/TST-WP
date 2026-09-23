@@ -1,0 +1,64 @@
+.tst-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 8px;
+  background: #fff;
+  font-size: 0.75rem;
+}
+
+.tst-product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.tst-product-card__media {
+  position: relative;
+  display: block;
+  background: #f6f6f6;
+}
+
+.tst-product-card__media img {
+  display: block;
+  width: 100%;
+}
+
+.tst-product-card__body {
+  padding-top: 12px;
+}
+
+.tst-product-card__title {
+  margin: 0 0 6px;
+  font-size: 1rem;
+}
+
+.tst-product-card__price {
+  margin-bottom: 12px;
+}
+
+.tst-hero {
+  padding: 120px 0;
+  background: #f1eee9;
+}
+
+.tst-hero h1 {
+  max-width: 700px;
+  font-size: clamp(2.5rem, 6vw, 6rem);
+  line-height: 1.05;
+}
+
+.tst-footer {
+  padding: 48px 0;
+  border-top: 1px solid var(--tst-border);
+}
+
+.tst-footer__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.tst-footer p {
+  color: var(--tst-muted);
+}
