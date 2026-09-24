@@ -1,0 +1,250 @@
+.tst-cart-drawer {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.tst-cart-drawer.is-open {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.tst-cart-drawer__backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: rgb(0 0 0 / 48%);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.tst-cart-drawer.is-open .tst-cart-drawer__backdrop {
+  opacity: 1;
+}
+
+.tst-cart-drawer__panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 440px);
+  height: 100%;
+  background: #fff;
+  box-shadow: -12px 0 32px rgb(0 0 0 / 12%);
+  transform: translateX(100%);
+  transition: transform 240ms ease;
+}
+
+.tst-cart-drawer.is-open .tst-cart-drawer__panel {
+  transform: translateX(0);
+}
+
+.tst-cart-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e9e9e9;
+}
+
+.tst-cart-drawer__header h2 {
+  margin: 0;
+  color: #222;
+  font-size: 21px;
+  line-height: 1.3;
+}
+
+.tst-cart-drawer__close,
+.tst-cart-drawer__remove {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #333;
+  cursor: pointer;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.tst-cart-drawer__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.tst-cart-drawer__content[aria-busy="true"] {
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.tst-cart-drawer__items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 24px;
+}
+
+.tst-cart-drawer__item {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr) 28px;
+  gap: 14px;
+  padding: 18px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.tst-cart-drawer__image {
+  display: block;
+  width: 84px;
+  height: 104px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #f6f6f6;
+}
+
+.tst-cart-drawer__image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.tst-cart-drawer__item-name {
+  color: #222;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.tst-cart-drawer__item-name:hover {
+  color: #b51225;
+}
+
+.tst-cart-drawer__variation,
+.tst-cart-drawer__quantity {
+  margin: 6px 0 0;
+  color: #666;
+  font-size: 13px;
+}
+
+.tst-cart-drawer__variation dl {
+  margin: 0;
+}
+
+.tst-cart-drawer__variation dt,
+.tst-cart-drawer__variation dd {
+  display: inline;
+  margin: 0 4px 0 0;
+}
+
+.tst-cart-drawer__variation dd::after {
+  content: '';
+  display: block;
+}
+
+.tst-cart-drawer__price {
+  margin: 8px 0 0;
+  color: #b51225;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.tst-cart-drawer__remove {
+  width: 28px;
+  height: 28px;
+  font-size: 23px;
+}
+
+.tst-cart-drawer__summary {
+  padding: 22px 24px 26px;
+  border-top: 1px solid #e9e9e9;
+}
+
+.tst-cart-drawer__subtotal {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: #222;
+  font-size: 16px;
+}
+
+.tst-cart-drawer__shipping {
+  margin: 10px 0 18px;
+  color: #777;
+  font-size: 13px;
+}
+
+.tst-cart-drawer__checkout,
+.tst-cart-drawer__view-cart {
+  display: block;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.tst-cart-drawer__checkout {
+  background: #b51225;
+  color: #fff;
+}
+
+.tst-cart-drawer__checkout:hover,
+.tst-cart-drawer__checkout:focus-visible {
+  background: #8e0e1d;
+  color: #fff;
+}
+
+.tst-cart-drawer__view-cart {
+  margin-top: 9px;
+  border: 1px solid #ddd;
+  color: #333;
+}
+
+.tst-cart-drawer__view-cart:hover,
+.tst-cart-drawer__view-cart:focus-visible {
+  border-color: #333;
+}
+
+.tst-cart-drawer__empty {
+  display: grid;
+  place-content: center;
+  flex: 1;
+  gap: 16px;
+  padding: 24px;
+  color: #555;
+  text-align: center;
+}
+
+.tst-cart-drawer__empty p {
+  margin: 0;
+}
+
+.tst-cart-drawer__empty button {
+  padding: 10px 16px;
+  border: 1px solid #b51225;
+  border-radius: 6px;
+  background: #fff;
+  color: #b51225;
+  cursor: pointer;
+}
+
+body.tst-cart-drawer-open {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tst-cart-drawer__backdrop,
+  .tst-cart-drawer__panel {
+    transition: none;
+  }
+}

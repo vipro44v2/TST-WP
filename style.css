@@ -9,7 +9,5 @@ Text Domain: tst-custom
 @import url("assets/css/base.css");
 @import url("assets/css/components.css");
 @import url("assets/css/header.css");
-@import url("assets/css/product.css");
-@import url("assets/css/collection.css");
-@import url("assets/css/cart.css");
 @import url("assets/css/checkout.css");
+@import url("assets/css/footer.css");

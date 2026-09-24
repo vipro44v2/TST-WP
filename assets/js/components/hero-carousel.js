@@ -20,6 +20,8 @@
     const dots = [...hero.querySelectorAll('[data-tst-hero-dot]')];
     let currentIndex = 0;
     let touchStartX = null;
+    let mouseStartX = null;
+    let mouseDragged = false;
 
     if (slides.length < 2 || slides.length !== dots.length) {
       return;
@@ -31,6 +33,73 @@
         showSlide(slides, dots, currentIndex);
       });
     });
+
+    hero.addEventListener('pointerdown', (event) => {
+      if (event.pointerType !== 'mouse' || event.button !== 0) {
+        return;
+      }
+
+      if (event.target.closest('a, button')) {
+        return;
+      }
+
+      mouseStartX = event.clientX;
+      mouseDragged = false;
+      hero.setPointerCapture(event.pointerId);
+    });
+
+    hero.addEventListener('pointermove', (event) => {
+      if (mouseStartX === null || Math.abs(event.clientX - mouseStartX) < 10) {
+        return;
+      }
+
+      mouseDragged = true;
+      hero.classList.add('is-dragging');
+    });
+
+    hero.addEventListener('pointerup', (event) => {
+      if (mouseStartX === null) {
+        return;
+      }
+
+      const distance = event.clientX - mouseStartX;
+      mouseStartX = null;
+      hero.classList.remove('is-dragging');
+
+      if (Math.abs(distance) < 50) {
+        return;
+      }
+
+      currentIndex = (currentIndex + (distance < 0 ? 1 : -1) + slides.length) % slides.length;
+      showSlide(slides, dots, currentIndex);
+    });
+
+    hero.addEventListener('pointercancel', () => {
+      mouseStartX = null;
+      hero.classList.remove('is-dragging');
+    });
+
+    hero.addEventListener('click', (event) => {
+      if (!mouseDragged) {
+        return;
+      }
+
+      event.preventDefault();
+      mouseDragged = false;
+    }, true);
+
+    const interval = Number.parseInt(hero.dataset.tstHeroInterval, 10);
+
+    if (hero.dataset.tstHeroAutoplay === '1' && interval >= 2000 && interval <= 20000) {
+      window.setInterval(() => {
+        if (document.hidden || hero.matches(':hover, :focus-within')) {
+          return;
+        }
+
+        currentIndex = (currentIndex + 1) % slides.length;
+        showSlide(slides, dots, currentIndex);
+      }, interval);
+    }
 
     hero.addEventListener('touchstart', (event) => {
       touchStartX = event.changedTouches[0]?.clientX ?? null;

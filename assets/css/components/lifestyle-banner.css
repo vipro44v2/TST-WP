@@ -1,0 +1,104 @@
+.tst-lifestyle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: clamp(380px, 34vw, 600px);
+  overflow: hidden;
+  background: #99999c;
+  color: #fff;
+}
+
+.tst-lifestyle__image,
+.tst-lifestyle__shade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.tst-lifestyle__image {
+  object-fit: cover;
+  object-position: center;
+}
+
+.tst-lifestyle__shade {
+  background: linear-gradient(90deg, rgb(0 0 0 / 18%), transparent 65%);
+}
+
+.tst-lifestyle__content {
+  position: relative;
+  z-index: 1;
+  width: min(100% - 48px, 1260px);
+  margin: 0 auto;
+}
+
+.tst-lifestyle__title {
+  margin: 0 0 10px;
+  color: inherit;
+  font-size: clamp(32px, 3vw, 50px);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.tst-lifestyle__subtitle {
+  margin: 0 0 16px;
+  font-size: clamp(16px, 1.35vw, 21px);
+  letter-spacing: 0.02em;
+  line-height: 1.45;
+}
+
+.tst-lifestyle__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px 9px 20px;
+  border-radius: 999px;
+  background: #b51225;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  transition: background-color 180ms ease;
+}
+
+.tst-lifestyle__button:hover,
+.tst-lifestyle__button:focus-visible {
+  background: #8e0e1d;
+  color: #fff;
+}
+
+.tst-lifestyle__arrow {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  color: #b51225;
+  font-size: 14px;
+}
+
+@media (max-width: 700px) {
+  .tst-lifestyle {
+    min-height: 420px;
+  }
+
+  .tst-lifestyle__image {
+    object-position: 58% center;
+  }
+
+  .tst-lifestyle__shade {
+    background: linear-gradient(90deg, rgb(0 0 0 / 55%), rgb(0 0 0 / 10%));
+  }
+
+  .tst-lifestyle__content {
+    width: min(100% - 32px, 1260px);
+  }
+
+  .tst-lifestyle__subtitle {
+    max-width: 260px;
+  }
+}

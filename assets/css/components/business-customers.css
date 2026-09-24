@@ -1,0 +1,136 @@
+.tst-business {
+  padding: 32px 24px 72px;
+  background: #fffafb;
+  color: #222;
+}
+
+.tst-business__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+  gap: 40px;
+  width: min(100%, 1156px);
+  margin: 0 auto;
+}
+
+.tst-business__lead-image,
+.tst-business__card-image {
+  overflow: hidden;
+  background: #f2e8e7;
+}
+
+.tst-business__lead-image {
+  aspect-ratio: 440 / 573;
+}
+
+.tst-business__lead-image img,
+.tst-business__card-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tst-business__content {
+  min-width: 0;
+}
+
+.tst-business__title {
+  margin: 0 0 2px;
+  color: inherit;
+  font-size: clamp(22px, 2vw, 26px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+}
+
+.tst-business__subtitle {
+  margin: 0 0 28px;
+  color: #555;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+}
+
+.tst-business__cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 66px;
+  margin-bottom: 34px;
+}
+
+.tst-business__card-image {
+  aspect-ratio: 304 / 379;
+  border-radius: 4px;
+}
+
+.tst-business__card-title {
+  margin: 14px 0 0;
+  color: #444;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.tst-business__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px 9px 20px;
+  border-radius: 999px;
+  background: #b51225;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.tst-business__button:hover,
+.tst-business__button:focus-visible {
+  background: #8e0e1d;
+  color: #fff;
+}
+
+.tst-business__arrow {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  color: #b51225;
+  font-size: 14px;
+}
+
+@media (max-width: 900px) {
+  .tst-business__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+    gap: 24px;
+  }
+
+  .tst-business__cards {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .tst-business {
+    padding: 24px 16px 48px;
+  }
+
+  .tst-business__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .tst-business__lead-image {
+    max-height: 420px;
+  }
+
+  .tst-business__subtitle {
+    margin-bottom: 20px;
+  }
+
+  .tst-business__cards {
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+}

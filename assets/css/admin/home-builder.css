@@ -46,6 +46,33 @@
   padding: 16px;
 }
 
+.tst-builder__fields[hidden] {
+  display: none;
+}
+
+.tst-builder__collections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+  max-height: 220px;
+  padding: 12px;
+  border: 1px solid #dcdcde;
+  overflow-y: auto;
+}
+
+.tst-builder__group {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #dcdcde;
+}
+
+.tst-builder__group legend {
+  padding-inline: 6px;
+  font-weight: 600;
+}
+
 .tst-builder__field,
 .tst-builder__image {
   display: grid;

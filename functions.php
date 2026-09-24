@@ -14,4 +14,8 @@ require_once TST_DIR . '/inc/helpers.php';
 require_once TST_DIR . '/inc/theme-settings.php';
 require_once TST_DIR . '/inc/home-builder.php';
 require_once TST_DIR . '/inc/woocommerce.php';
+require_once TST_DIR . '/inc/collection.php';
+require_once TST_DIR . '/inc/color-swatch.php';
 require_once TST_DIR . '/inc/ajax-cart.php';
+require_once TST_DIR . '/inc/cart-drawer.php';
+require_once TST_DIR . '/inc/newsletter.php';

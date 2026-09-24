@@ -1,0 +1,118 @@
+.tst-promo-pair {
+  padding: 38px 40px;
+  background: #fff;
+}
+
+.tst-promo-pair__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  width: min(100%, 1786px);
+  margin: 0 auto;
+}
+
+.tst-promo-pair__card {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: clamp(380px, 34vw, 620px);
+  overflow: hidden;
+  border-radius: 4px;
+  background: #40302f;
+  color: #fff;
+}
+
+.tst-promo-pair__card--2 {
+  background: #48392f;
+}
+
+.tst-promo-pair__image,
+.tst-promo-pair__shade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.tst-promo-pair__image {
+  object-fit: cover;
+  object-position: center;
+}
+
+.tst-promo-pair__shade {
+  background: linear-gradient(0deg, rgb(0 0 0 / 55%), transparent 45%);
+}
+
+.tst-promo-pair__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 30px;
+}
+
+.tst-promo-pair__label {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  line-height: 1.2;
+}
+
+.tst-promo-pair__heading {
+  margin: 0 0 14px;
+  color: inherit;
+  font-size: clamp(24px, 2vw, 34px);
+  font-weight: 700;
+  line-height: 1.18;
+}
+
+.tst-promo-pair__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px 10px 18px;
+  border-radius: 999px;
+  background: #fff;
+  color: #333;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.tst-promo-pair__button:hover,
+.tst-promo-pair__button:focus-visible {
+  background: #f3e9e9;
+  color: #111;
+}
+
+.tst-promo-pair__arrow {
+  display: grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  background: #222;
+  color: #fff;
+  font-size: 13px;
+}
+
+@media (max-width: 700px) {
+  .tst-promo-pair {
+    padding: 24px 16px;
+  }
+
+  .tst-promo-pair__grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .tst-promo-pair__card {
+    min-height: 420px;
+  }
+
+  .tst-promo-pair__content {
+    padding: 24px;
+  }
+}

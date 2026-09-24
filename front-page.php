@@ -28,6 +28,76 @@ foreach ( tst_get_home_blocks() as $tst_block ) {
         continue;
     }
 
+    if ( 'lifestyle' === $tst_type ) {
+        get_template_part(
+            'template-parts/home/lifestyle-banner',
+            null,
+            array(
+                'block' => $tst_block,
+                'url'   => $tst_shop_url,
+            )
+        );
+        continue;
+    }
+
+    if ( 'craft' === $tst_type ) {
+        get_template_part(
+            'template-parts/home/craft-story',
+            null,
+            array(
+                'block' => $tst_block,
+                'url'   => $tst_shop_url,
+            )
+        );
+        continue;
+    }
+
+    if ( 'business' === $tst_type ) {
+        get_template_part(
+            'template-parts/home/business-customers',
+            null,
+            array(
+                'block' => $tst_block,
+                'url'   => $tst_shop_url,
+            )
+        );
+        continue;
+    }
+
+    if ( 'promo_pair' === $tst_type ) {
+        get_template_part(
+            'template-parts/home/promo-pair',
+            null,
+            array(
+                'block' => $tst_block,
+                'url'   => $tst_shop_url,
+            )
+        );
+        continue;
+    }
+
+    if ( 'category_grid' === $tst_type ) {
+        get_template_part(
+            'template-parts/home/category-grid',
+            null,
+            array(
+                'block' => $tst_block,
+                'url'   => $tst_shop_url,
+            )
+        );
+        continue;
+    }
+
+    if ( 'newsletter' === $tst_type ) {
+        get_template_part( 'template-parts/home/newsletter', null, array( 'block' => $tst_block ) );
+        continue;
+    }
+
+    if ( 'contact' === $tst_type ) {
+        get_template_part( 'template-parts/home/contact-feedback', null, array( 'block' => $tst_block ) );
+        continue;
+    }
+
     if ( ! $tst_has_woocommerce ) {
         continue;
     }

@@ -5,12 +5,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $tst_block       = is_array( $args['block'] ?? null ) ? $args['block'] : array();
 $tst_default_url = $args['url'] ?? home_url( '/' );
-$tst_saved_url   = $tst_block['url'] ?? tst_get_setting( 'hero_cta_url', '' );
+$tst_saved_url   = $tst_block['button_url'] ?? '';
 $tst_hero_url    = is_string( $tst_saved_url ) && '' !== $tst_saved_url
     ? $tst_saved_url
     : $tst_default_url;
-$tst_heading     = $tst_block['title'] ?? tst_get_setting( 'hero_heading', '' );
-$tst_cta_text    = $tst_block['text'] ?? tst_get_setting( 'hero_cta_text', '' );
+$tst_heading     = $tst_block['title'] ?? '';
+$tst_cta_text    = $tst_block['button_text'] ?? '';
 
 if ( ! is_string( $tst_heading ) || '' === trim( $tst_heading ) ) {
     $tst_heading = __( 'Designed for everyday living.', 'tst-custom' );
@@ -26,8 +26,6 @@ $tst_slide_defaults = array(
         'alt'     => __( 'Five summer footwear looks in warm neutral tones', 'tst-custom' ),
         'width'   => 2048,
         'height'  => 768,
-        'id_key'  => 'hero_image_1',
-        'alt_key' => 'hero_alt_1',
         'srcset'  => '',
     ),
     2 => array(
@@ -35,12 +33,10 @@ $tst_slide_defaults = array(
         'alt'     => __( 'Five elegant sandal and heel looks in natural settings', 'tst-custom' ),
         'width'   => 2073,
         'height'  => 758,
-        'id_key'  => 'hero_image_2',
-        'alt_key' => 'hero_alt_2',
         'srcset'  => '',
     ),
 );
-$tst_slide_order = tst_get_hero_slide_order( tst_get_setting( 'hero_slide_order', '1,2' ) );
+$tst_slide_order = '2,1' === ( $tst_block['slide_order'] ?? '' ) ? array( 2, 1 ) : array( 1, 2 );
 $tst_slides      = array();
 
 foreach ( $tst_slide_order as $slide_number ) {
@@ -49,7 +45,7 @@ foreach ( $tst_slide_order as $slide_number ) {
 
 foreach ( $tst_slides as $tst_index => &$tst_slide ) {
     $image_key = 'image_' . $tst_slide_order[ $tst_index ];
-    $image_id = absint( $tst_block[ $image_key ] ?? tst_get_setting( $tst_slide['id_key'], 0 ) );
+    $image_id = absint( $tst_block[ $image_key ] ?? 0 );
 
     if ( $image_id && wp_attachment_is_image( $image_id ) ) {
         $image = wp_get_attachment_image_src( $image_id, 'full' );
@@ -67,7 +63,7 @@ foreach ( $tst_slides as $tst_index => &$tst_slide ) {
         }
     }
 
-    $custom_alt = tst_get_setting( $tst_slide['alt_key'], '' );
+    $custom_alt = $tst_block[ $image_key . '_alt' ] ?? '';
 
     if ( is_string( $custom_alt ) && '' !== trim( $custom_alt ) ) {
         $tst_slide['alt'] = $custom_alt;
@@ -81,6 +77,8 @@ unset( $tst_slide );
   aria-roledescription="carousel"
   aria-label="<?php esc_attr_e( 'Featured footwear collections', 'tst-custom' ); ?>"
   data-tst-hero
+  data-tst-hero-autoplay="<?php echo empty( $tst_block['autoplay'] ) ? '0' : '1'; ?>"
+  data-tst-hero-interval="<?php echo esc_attr( $tst_block['autoplay_interval'] ?? 6000 ); ?>"
 >
   <h1 class="tst-hero__title">
     <?php echo esc_html( $tst_heading ); ?>
@@ -97,6 +95,7 @@ unset( $tst_slide );
     >
       <img
         class="tst-hero__image"
+        draggable="false"
         src="<?php echo esc_url( $slide['image'] ); ?>"
         alt="<?php echo esc_attr( $slide['alt'] ); ?>"
         width="<?php echo esc_attr( $slide['width'] ); ?>"

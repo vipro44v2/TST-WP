@@ -23,7 +23,19 @@
 
       block.querySelector('[data-tst-builder-up]').disabled = index === 0;
       block.querySelector('[data-tst-builder-down]').disabled = index === blocks().length - 1;
+      const blockId = block.querySelector('[data-tst-builder-name="id"]').value;
+      const fields = block.querySelector('[data-tst-builder-fields]');
+      fields.id = `tst-builder-fields-${blockId}`;
+      block.querySelector('[data-tst-builder-toggle]').setAttribute('aria-controls', fields.id);
     });
+  }
+
+  function setExpanded(block, expanded) {
+    const fields = block.querySelector('[data-tst-builder-fields]');
+    const toggle = block.querySelector('[data-tst-builder-toggle]');
+    fields.hidden = !expanded;
+    toggle.setAttribute('aria-expanded', String(expanded));
+    toggle.textContent = expanded ? labels.collapse : labels.expand;
   }
 
   function openPicker(field) {
@@ -58,6 +70,11 @@
     const block = event.target.closest('[data-tst-builder-block]');
 
     if (!block) {
+      return;
+    }
+
+    if (event.target.closest('[data-tst-builder-toggle]')) {
+      setExpanded(block, block.querySelector('[data-tst-builder-fields]').hidden);
       return;
     }
 
@@ -113,6 +130,7 @@
       `block-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
     list.append(block);
     renumber();
+    setExpanded(block, true);
     block.scrollIntoView({ behavior: 'smooth', block: 'center' });
   });
 
@@ -164,4 +182,5 @@
   });
 
   renumber();
+  blocks().forEach((block) => setExpanded(block, false));
 })();

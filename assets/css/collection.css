@@ -1,20 +1,321 @@
-.tst-collection-layout {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: 48px;
+.tst-collection {
+  padding-block: 18px 72px;
 }
 
-.tst-collection__filters {
-  padding-right: 24px;
-  border-right: 1px solid var(--tst-border);
-}
-
-.tst-sortbar {
+.tst-collection__breadcrumb {
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: #74777b;
+  font-size: 13px;
 }
 
-.tst-archive-header {
-  margin-bottom: 36px;
+.tst-collection__breadcrumb [aria-current] {
+  color: #252525;
+}
+
+.tst-collection__header {
+  margin: 24px 0 26px;
+}
+
+.tst-collection__header h1 {
+  margin: 0;
+  color: #202124;
+  font-size: clamp(30px, 3vw, 42px);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.tst-collection__layout {
+  display: grid;
+  grid-template-columns: 264px minmax(0, 1fr);
+  gap: 52px;
+}
+
+.tst-collection__products {
+  min-width: 0;
+}
+
+.tst-collection__active {
+  margin-bottom: 22px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #d5d5d5;
+}
+
+.tst-collection__active-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tst-collection__active-heading h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.tst-collection__active-heading > a {
+  color: #aa1722;
+  font-size: 15px;
+}
+
+.tst-collection__active-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.tst-collection__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 100%;
+  padding: 8px 13px;
+  border: 1px solid #d5d5d5;
+  border-radius: 999px;
+  color: #222;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.tst-collection__chip span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tst-collection__chip span:last-child {
+  font-size: 22px;
+  line-height: 0.7;
+}
+
+.tst-collection__filter {
+  margin-bottom: 18px;
+}
+
+.tst-collection__filter summary {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  list-style: none;
+  margin-bottom: 13px;
+  color: #222;
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.tst-collection__filter summary::-webkit-details-marker {
+  display: none;
+}
+
+.tst-collection__filter summary::after {
+  content: '+';
+  margin-left: auto;
+  font-weight: 400;
+}
+
+.tst-collection__filter[open] summary::after {
+  content: '−';
+}
+
+.tst-collection__price-range {
+  display: grid;
+  align-items: center;
+  height: 22px;
+  margin-bottom: 13px;
+}
+
+.tst-collection__price-range input {
+  grid-area: 1 / 1;
+  width: 100%;
+  margin: 0;
+  accent-color: #aa1722;
+  background: transparent;
+  pointer-events: none;
+}
+
+.tst-collection__price-range input::-webkit-slider-thumb {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.tst-collection__price-range input::-moz-range-thumb {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.tst-collection__price-inputs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.tst-collection__price-inputs label {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding: 8px 12px;
+  border: 1px solid #d5d5d5;
+  border-radius: 999px;
+  font-size: 14px;
+}
+
+.tst-collection__price-inputs input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: inherit;
+}
+
+.tst-collection__price-inputs input::-webkit-inner-spin-button {
+  appearance: none;
+}
+
+.tst-collection__colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tst-collection__color {
+  position: relative;
+  display: block;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.tst-collection__color input {
+  position: absolute;
+  opacity: 0;
+}
+
+.tst-collection__color > span:not(.screen-reader-text) {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.tst-collection__color input:checked + span,
+.tst-collection__color input:focus-visible + span {
+  outline: 2px solid #aa1722;
+  outline-offset: 3px;
+}
+
+.tst-collection__color input:checked + span::after {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  content: '✓';
+  color: #fff;
+  font-size: 18px;
+  text-shadow: 0 1px 2px #333;
+}
+
+.tst-collection__choices {
+  display: grid;
+  gap: 5px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.tst-collection__choices label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #565a5e;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.tst-collection__choices input {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  accent-color: #aa1722;
+}
+
+.tst-collection__sortbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 42px;
+  margin-bottom: 12px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.tst-collection__sortbar .woocommerce-ordering {
+  margin: 0;
+}
+
+.tst-collection__sortbar select {
+  max-width: 220px;
+  padding: 9px 15px;
+  border: 1px solid #d5d5d5;
+  border-radius: 999px;
+  background: #fff;
+  color: #666;
+  font: inherit;
+  font-weight: 400;
+}
+
+.tst-collection__result-count {
+  margin-left: auto;
+  color: #333;
+  font-size: 13px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.tst-collection__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 28px 10px;
+}
+
+.tst-collection__grid .tst-product-card__media {
+  aspect-ratio: 1 / 1.3;
+}
+
+.tst-collection__products .woocommerce-pagination {
+  margin-top: 36px;
+  text-align: center;
+}
+
+@media (max-width: 1200px) {
+  .tst-collection__layout {
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .tst-collection__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 800px) {
+  .tst-collection__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .tst-collection__filters {
+    padding: 16px;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+  }
+
+  .tst-collection__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 12px;
+  }
 }

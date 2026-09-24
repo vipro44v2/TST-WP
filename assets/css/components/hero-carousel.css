@@ -3,6 +3,12 @@
   height: clamp(500px, 40vw, 760px);
   overflow: hidden;
   background: #d9c2ad;
+  cursor: grab;
+  user-select: none;
+}
+
+.tst-hero.is-dragging {
+  cursor: grabbing;
 }
 
 .tst-hero__title {
