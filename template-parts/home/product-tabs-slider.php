@@ -7,6 +7,8 @@ if (
 }
 
 $limit = max( 2, absint( tst_get_setting( 'tabs_products_per_tab', 8 ) ) );
+$block = is_array( $args['block'] ?? null ) ? $args['block'] : array();
+$heading = $block['title'] ?? tst_get_setting( 'tabs_heading', '' );
 $shop_url = function_exists( 'wc_get_page_permalink' )
     ? wc_get_page_permalink( 'shop' )
     : home_url( '/' );
@@ -31,6 +33,9 @@ $groups = array(
 ?>
 <section class="tst-product-tabs tst-section" data-tst-product-tabs>
   <div class="tst-container">
+    <?php if ( $heading ) : ?>
+      <h2><?php echo esc_html( $heading ); ?></h2>
+    <?php endif; ?>
     <div class="tst-product-tabs__header">
       <div class="tst-product-tabs__nav" role="tablist">
         <button

@@ -8,41 +8,37 @@ if ( $tst_has_woocommerce && function_exists( 'wc_get_page_permalink' ) ) {
     $tst_shop_url = wc_get_page_permalink( 'shop' );
 }
 ?>
-<section class="tst-hero">
-  <div class="tst-container">
-    <p class="tst-eyebrow">TST CUSTOM</p>
-    <h1><?php esc_html_e( 'Designed for everyday living.', 'tst-custom' ); ?></h1>
-    <a class="tst-button" href="<?php echo esc_url( $tst_shop_url ); ?>">
-      <?php esc_html_e( 'Shop now', 'tst-custom' ); ?>
-    </a>
-  </div>
-</section>
-
 <?php
-if ( $tst_has_woocommerce && tst_get_setting( 'tabs_enabled', 1 ) ) {
-    get_template_part( 'template-parts/home/product-tabs-slider' );
+foreach ( tst_get_home_blocks() as $tst_block ) {
+    if ( ! is_array( $tst_block ) || empty( $tst_block['enabled'] ) ) {
+        continue;
+    }
+
+    $tst_type = $tst_block['type'] ?? '';
+
+    if ( 'hero' === $tst_type ) {
+        get_template_part(
+            'template-parts/home/hero-carousel',
+            null,
+            array(
+                'url'   => $tst_shop_url,
+                'block' => $tst_block,
+            )
+        );
+        continue;
+    }
+
+    if ( ! $tst_has_woocommerce ) {
+        continue;
+    }
+
+    if ( 'tabs' === $tst_type ) {
+        get_template_part( 'template-parts/home/product-tabs-slider', null, array( 'block' => $tst_block ) );
+    }
+
+    if ( 'featured' === $tst_type && function_exists( 'wc_get_product' ) ) {
+        get_template_part( 'template-parts/home/featured-products', null, array( 'block' => $tst_block ) );
+    }
 }
 ?>
-
-<?php if ( $tst_has_woocommerce && function_exists( 'wc_get_product' ) ) : ?>
-<section class="tst-container tst-section">
-  <h2><?php esc_html_e( 'Featured products', 'tst-custom' ); ?></h2>
-  <div class="tst-product-grid">
-    <?php
-    $query = new WP_Query(
-        array(
-            'post_type'      => 'product',
-            'posts_per_page' => 8,
-        )
-    );
-
-    while ( $query->have_posts() ) :
-        $query->the_post();
-        tst_get_product_card();
-    endwhile;
-    wp_reset_postdata();
-    ?>
-  </div>
-</section>
-<?php endif; ?>
 <?php get_footer(); ?>

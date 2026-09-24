@@ -59,11 +59,6 @@ img {
   font-size: 0.85rem;
 }
 
-.tst-eyebrow {
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-}
-
 .tst-entry {
   padding-block: 20px;
   border-bottom: 1px solid var(--tst-border);

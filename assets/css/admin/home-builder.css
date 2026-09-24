@@ -1,0 +1,78 @@
+.tst-builder {
+  max-width: 900px;
+}
+
+.tst-builder__list {
+  display: grid;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.tst-builder__block {
+  border: 1px solid #c3c4c7;
+  background: #fff;
+}
+
+.tst-builder__block.is-dragging {
+  opacity: 0.5;
+}
+
+.tst-builder__block.is-drop-target {
+  border-color: #2271b1;
+  box-shadow: 0 0 0 1px #2271b1;
+}
+
+.tst-builder__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #dcdcde;
+  background: #f6f7f7;
+  cursor: grab;
+}
+
+.tst-builder__toolbar strong {
+  flex: 1;
+}
+
+.tst-builder__handle {
+  font-size: 18px;
+}
+
+.tst-builder__fields {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.tst-builder__field,
+.tst-builder__image {
+  display: grid;
+  gap: 6px;
+}
+
+.tst-builder__field input {
+  width: 100%;
+  max-width: 500px;
+}
+
+.tst-builder__image img {
+  display: block;
+  max-width: min(100%, 380px);
+  height: auto;
+}
+
+.tst-builder__image img[hidden] {
+  display: none;
+}
+
+.tst-builder__image button {
+  width: fit-content;
+}
+
+.tst-builder__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
