@@ -28,6 +28,10 @@ $tst_first_image_alt = $tst_first_image_id ? get_post_meta( $tst_first_image_id,
 $tst_first_image_alt = $tst_first_image_alt ?: $product->get_name();
 $tst_color_map = array();
 $tst_variation_image_map = array();
+$tst_color_preview_map = array();
+$tst_color_preview_has_image = array();
+$tst_wildcard_color_image = null;
+$tst_wildcard_color_has_image = false;
 
 if ( $product->is_type( 'variable' ) ) {
     foreach ( $product->get_available_variations( 'objects' ) as $tst_variation ) {
@@ -35,9 +39,8 @@ if ( $product->is_type( 'variable' ) ) {
             continue;
         }
 
-        $tst_variation_gallery_ids = $tst_variation->get_gallery_image_ids();
-        $tst_variation_image_id = $tst_variation->get_image_id()
-            ?: ( $tst_variation_gallery_ids[0] ?? $tst_first_image_id );
+        $tst_variation_featured_id = $tst_variation->get_image_id();
+        $tst_variation_image_id = $tst_variation_featured_id ?: $tst_first_image_id;
 
         if ( ! $tst_variation_image_id ) {
             continue;
@@ -50,7 +53,7 @@ if ( $product->is_type( 'variable' ) ) {
         }
 
         $tst_variation_image_alt = get_post_meta( $tst_variation_image_id, '_wp_attachment_image_alt', true );
-        $tst_variation_image_map[ $tst_variation->get_id() ] = array(
+        $tst_variation_image = array(
             'id'     => $tst_variation->get_id(),
             'src'    => esc_url_raw( $tst_variation_image_data[0] ),
             'srcset' => wp_get_attachment_image_srcset( $tst_variation_image_id, 'large' ) ?: '',
@@ -58,6 +61,34 @@ if ( $product->is_type( 'variable' ) ) {
             'width'  => absint( $tst_variation_image_data[1] ),
             'height' => absint( $tst_variation_image_data[2] ),
         );
+        $tst_variation_image_map[ $tst_variation->get_id() ] = $tst_variation_image;
+
+        if ( ! $tst_variation->is_purchasable() || ! $tst_variation->is_in_stock() ) {
+            continue;
+        }
+
+        foreach ( $tst_variation->get_variation_attributes() as $tst_attribute => $tst_value ) {
+            if ( 'color' !== tst_product_attribute_kind( $tst_attribute ) ) {
+                continue;
+            }
+
+            if ( '' === $tst_value ) {
+                if ( ! $tst_wildcard_color_image || ( $tst_variation_featured_id && ! $tst_wildcard_color_has_image ) ) {
+                    $tst_wildcard_color_image = $tst_variation_image;
+                    $tst_wildcard_color_has_image = (bool) $tst_variation_featured_id;
+                }
+
+                continue;
+            }
+
+            if (
+                ! isset( $tst_color_preview_map[ $tst_value ] ) ||
+                ( $tst_variation_featured_id && empty( $tst_color_preview_has_image[ $tst_value ] ) )
+            ) {
+                $tst_color_preview_map[ $tst_value ] = $tst_variation_image;
+                $tst_color_preview_has_image[ $tst_value ] = (bool) $tst_variation_featured_id;
+            }
+        }
     }
 
     foreach ( $product->get_variation_attributes() as $tst_attribute => $tst_values ) {
@@ -67,6 +98,10 @@ if ( $product->is_type( 'variable' ) ) {
 
         foreach ( $tst_values as $tst_value ) {
             $tst_color_map[ $tst_value ] = tst_product_color_hex( $tst_attribute, $tst_value );
+
+            if ( ! isset( $tst_color_preview_map[ $tst_value ] ) && $tst_wildcard_color_image ) {
+                $tst_color_preview_map[ $tst_value ] = $tst_wildcard_color_image;
+            }
         }
     }
 }
@@ -88,6 +123,7 @@ if ( function_exists( 'woocommerce_breadcrumb' ) ) {
   data-tst-single-product
   data-tst-color-map="<?php echo esc_attr( wp_json_encode( $tst_color_map ) ); ?>"
   data-tst-variation-images="<?php echo esc_attr( wp_json_encode( $tst_variation_image_map, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ) ); ?>"
+  data-tst-color-images="<?php echo esc_attr( wp_json_encode( $tst_color_preview_map, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ) ); ?>"
 >
   <div class="tst-product-gallery<?php echo count( $tst_image_ids ) < 2 ? ' tst-product-gallery--single' : ''; ?>" data-tst-product-gallery>
     <?php if ( count( $tst_image_ids ) > 1 ) : ?>
