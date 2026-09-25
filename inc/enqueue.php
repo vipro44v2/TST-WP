@@ -9,6 +9,16 @@ function tst_enqueue_assets() {
     wp_enqueue_script( 'tst-main', TST_URI . '/assets/js/main.js', array(), TST_VERSION, true );
     $tst_is_product_page = class_exists( 'WooCommerce' ) && is_product();
     $tst_is_cart_page = class_exists( 'WooCommerce' ) && function_exists( 'is_cart' ) && is_cart();
+    $tst_is_checkout_page = class_exists( 'WooCommerce' ) && function_exists( 'is_checkout' ) && is_checkout();
+
+    if ( $tst_is_checkout_page ) {
+        wp_enqueue_style(
+            'tst-checkout-page',
+            TST_URI . '/assets/css/checkout-page.css',
+            array( 'tst-style' ),
+            (string) filemtime( TST_DIR . '/assets/css/checkout-page.css' )
+        );
+    }
 
     if ( $tst_is_cart_page ) {
         wp_enqueue_style(

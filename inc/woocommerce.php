@@ -189,3 +189,99 @@ function tst_single_buy_now_redirect( $url ) {
     return wc_get_checkout_url();
 }
 add_filter( 'woocommerce_add_to_cart_redirect', 'tst_single_buy_now_redirect' );
+
+function tst_checkout_fields( $fields ) {
+    if ( ! is_array( $fields ) ) {
+        return $fields;
+    }
+
+    $billing_fields = array(
+        'billing_first_name' => array(
+            'label'       => __( 'Họ', 'tst-custom' ),
+            'placeholder' => __( 'Nhập họ', 'tst-custom' ),
+            'priority'    => 10,
+        ),
+        'billing_last_name' => array(
+            'label'       => __( 'Tên', 'tst-custom' ),
+            'placeholder' => __( 'Nhập tên', 'tst-custom' ),
+            'priority'    => 20,
+        ),
+        'billing_phone' => array(
+            'label'       => __( 'Số điện thoại', 'tst-custom' ),
+            'placeholder' => __( 'Nhập số điện thoại', 'tst-custom' ),
+            'priority'    => 30,
+        ),
+        'billing_email' => array(
+            'label'       => __( 'Địa chỉ email', 'tst-custom' ),
+            'placeholder' => __( 'Nhập địa chỉ email', 'tst-custom' ),
+            'priority'    => 40,
+        ),
+        'billing_country' => array(
+            'label'    => __( 'Quốc gia/Khu vực', 'tst-custom' ),
+            'priority' => 50,
+        ),
+        'billing_state' => array(
+            'label'    => __( 'Tỉnh/Thành phố', 'tst-custom' ),
+            'priority' => 60,
+        ),
+        'billing_city' => array(
+            'label'    => __( 'Quận/Huyện', 'tst-custom' ),
+            'priority' => 70,
+        ),
+        'billing_address_1' => array(
+            'label'       => __( 'Địa chỉ', 'tst-custom' ),
+            'placeholder' => __( 'Số nhà, tên đường...', 'tst-custom' ),
+            'priority'    => 80,
+        ),
+        'billing_address_2' => array(
+            'label'    => __( 'Địa chỉ bổ sung', 'tst-custom' ),
+            'priority' => 90,
+        ),
+        'billing_postcode' => array(
+            'label'    => __( 'Mã bưu chính', 'tst-custom' ),
+            'priority' => 100,
+        ),
+        'billing_company' => array(
+            'label'    => __( 'Tên công ty', 'tst-custom' ),
+            'priority' => 110,
+        ),
+    );
+
+    foreach ( $billing_fields as $field_name => $settings ) {
+        if ( isset( $fields['billing'][ $field_name ] ) ) {
+            $fields['billing'][ $field_name ] = array_merge( $fields['billing'][ $field_name ], $settings );
+        }
+    }
+
+    if ( isset( $fields['order']['order_comments'] ) ) {
+        $fields['order']['order_comments']['label'] = __( 'Ghi chú đơn hàng (tùy chọn)', 'tst-custom' );
+        $fields['order']['order_comments']['placeholder'] = __( 'Thời gian giao hàng hoặc chỉ dẫn thêm...', 'tst-custom' );
+    }
+
+    return $fields;
+}
+add_filter( 'woocommerce_checkout_fields', 'tst_checkout_fields' );
+
+function tst_checkout_gettext( $translated, $text, $domain ) {
+    if ( 'woocommerce' !== $domain || ! function_exists( 'is_checkout' ) || ! is_checkout() ) {
+        return $translated;
+    }
+
+    $labels = array(
+        'Billing details'              => __( 'Thông tin thanh toán', 'tst-custom' ),
+        'Billing & Shipping'           => __( 'Thông tin thanh toán', 'tst-custom' ),
+        'Billing &amp; Shipping'       => __( 'Thông tin thanh toán', 'tst-custom' ),
+        'Ship to a different address?' => __( 'Giao hàng đến một địa chỉ khác?', 'tst-custom' ),
+        'Your order'                   => __( 'Đơn hàng của bạn', 'tst-custom' ),
+        'Create an account?'           => __( 'Tạo tài khoản mới?', 'tst-custom' ),
+        'Additional information'       => __( 'Thông tin bổ sung', 'tst-custom' ),
+        'Product'                      => __( 'Sản phẩm', 'tst-custom' ),
+        'Subtotal'                     => __( 'Tạm tính', 'tst-custom' ),
+        'Total'                        => __( 'Tổng', 'tst-custom' ),
+        'Shipping'                     => __( 'Vận chuyển', 'tst-custom' ),
+        'optional'                     => __( 'tùy chọn', 'tst-custom' ),
+    );
+
+    return $labels[ $text ] ?? $translated;
+}
+add_filter( 'gettext', 'tst_checkout_gettext', 10, 3 );
