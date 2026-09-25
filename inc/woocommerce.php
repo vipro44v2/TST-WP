@@ -262,6 +262,39 @@ function tst_checkout_fields( $fields ) {
 }
 add_filter( 'woocommerce_checkout_fields', 'tst_checkout_fields' );
 
+function tst_validate_registration_phone( $errors ) {
+    if (
+        ! function_exists( 'is_account_page' ) ||
+        ! is_account_page() ||
+        ! isset( $_POST['register'] )
+    ) {
+        return $errors;
+    }
+
+    $phone = isset( $_POST['tst_register_phone'] ) && is_string( $_POST['tst_register_phone'] )
+        ? sanitize_text_field( wp_unslash( $_POST['tst_register_phone'] ) )
+        : '';
+
+    if ( '' === $phone ) {
+        $errors->add( 'tst_phone_required', __( 'Vui lòng nhập số điện thoại.', 'tst-custom' ) );
+    } elseif ( ! preg_match( '/^[0-9+().\s-]{8,20}$/', $phone ) ) {
+        $errors->add( 'tst_phone_invalid', __( 'Số điện thoại không hợp lệ.', 'tst-custom' ) );
+    }
+
+    return $errors;
+}
+add_filter( 'woocommerce_registration_errors', 'tst_validate_registration_phone' );
+
+function tst_save_registration_phone( $customer_id ) {
+    if ( ! isset( $_POST['tst_register_phone'] ) || ! is_string( $_POST['tst_register_phone'] ) ) {
+        return;
+    }
+
+    $phone = sanitize_text_field( wp_unslash( $_POST['tst_register_phone'] ) );
+    update_user_meta( $customer_id, 'billing_phone', $phone );
+}
+add_action( 'woocommerce_created_customer', 'tst_save_registration_phone' );
+
 function tst_checkout_gettext( $translated, $text, $domain ) {
     if ( 'woocommerce' !== $domain || ! function_exists( 'is_checkout' ) || ! is_checkout() ) {
         return $translated;

@@ -1,0 +1,122 @@
+.tst-account {
+  width: min(100% - 32px, 580px);
+  margin: 48px auto 80px;
+  color: var(--tst-text, #1b1b1b);
+}
+
+.tst-account__tabs {
+  display: flex;
+  gap: 28px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid var(--tst-border, #dedede);
+}
+
+.tst-account__tab {
+  min-height: 48px;
+  padding: 0 2px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--tst-muted, #666);
+  font: inherit;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tst-account__tab[aria-selected="true"] {
+  border-bottom-color: var(--tst-accent, #ae1023);
+  color: var(--tst-text, #1b1b1b);
+}
+
+.tst-account__panel[hidden] {
+  display: none;
+}
+
+.tst-account__form {
+  padding: 28px;
+  border: 1px solid var(--tst-border, #dedede);
+  border-radius: var(--tst-radius-md, 8px);
+  background: #fff;
+}
+
+.tst-account__form .form-row {
+  float: none;
+  width: 100%;
+  margin: 0 0 18px;
+  padding: 0;
+}
+
+.tst-account__form label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tst-account__form .input-text {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--tst-border, #dedede);
+  border-radius: var(--tst-radius-sm, 6px);
+  background: #fff;
+  font: inherit;
+}
+
+.tst-account__form .input-text:focus {
+  border-color: var(--tst-accent, #ae1023);
+  outline: 2px solid transparent;
+}
+
+.tst-account__form .required {
+  color: var(--tst-accent, #ae1023);
+}
+
+.tst-account__form .button {
+  min-height: 44px;
+  padding: 0 24px;
+  border: 0;
+  border-radius: var(--tst-radius-sm, 6px);
+  background: var(--tst-accent, #ae1023);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tst-account__form .button:hover {
+  filter: brightness(0.9);
+}
+
+.tst-account__form .woocommerce-form-login__rememberme {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 18px;
+  font-weight: 400;
+}
+
+.tst-account__form .lost_password {
+  margin: 0;
+  font-size: 14px;
+}
+
+.tst-account__form .woocommerce-privacy-policy-text,
+.tst-account__hint {
+  margin: 0 0 18px;
+  color: var(--tst-muted, #666);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .tst-account {
+    margin-top: 28px;
+  }
+
+  .tst-account__form {
+    padding: 20px;
+  }
+}

@@ -11,6 +11,22 @@ function tst_enqueue_assets() {
     $tst_is_cart_page = class_exists( 'WooCommerce' ) && function_exists( 'is_cart' ) && is_cart();
     $tst_is_checkout_page = class_exists( 'WooCommerce' ) && function_exists( 'is_checkout' ) && is_checkout();
 
+    if ( class_exists( 'WooCommerce' ) && function_exists( 'is_account_page' ) && is_account_page() && ! is_user_logged_in() ) {
+        wp_enqueue_style(
+            'tst-account',
+            TST_URI . '/assets/css/account.css',
+            array( 'tst-style' ),
+            (string) filemtime( TST_DIR . '/assets/css/account.css' )
+        );
+        wp_enqueue_script(
+            'tst-account',
+            TST_URI . '/assets/js/account.js',
+            array(),
+            (string) filemtime( TST_DIR . '/assets/js/account.js' ),
+            true
+        );
+    }
+
     if ( $tst_is_checkout_page ) {
         wp_enqueue_style(
             'tst-checkout-page',
