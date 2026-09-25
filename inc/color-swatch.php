@@ -18,6 +18,7 @@ function tst_color_swatch_add_field() {
         value=""
         data-default-color=""
       >
+      <?php wp_nonce_field( 'tst_color_swatch_save', 'tst_color_swatch_nonce' ); ?>
       <p><?php esc_html_e( 'Choose the color shown on product cards.', 'tst-custom' ); ?></p>
     </div>
     <?php
@@ -43,6 +44,7 @@ function tst_color_swatch_edit_field( $term ) {
           value="<?php echo esc_attr( $color ?: '' ); ?>"
           data-default-color=""
         >
+        <?php wp_nonce_field( 'tst_color_swatch_save', 'tst_color_swatch_nonce' ); ?>
         <p class="description">
           <?php esc_html_e( 'Choose the color shown on product cards.', 'tst-custom' ); ?>
         </p>
@@ -54,6 +56,17 @@ add_action( 'pa_color_edit_form_fields', 'tst_color_swatch_edit_field' );
 
 function tst_save_color_swatch( $term_id ) {
     if ( ! current_user_can( 'edit_term', $term_id ) ) {
+        return;
+    }
+
+    if (
+        ! isset( $_POST['tst_color_swatch_nonce'] ) ||
+        ! is_string( $_POST['tst_color_swatch_nonce'] ) ||
+        ! wp_verify_nonce(
+            sanitize_text_field( wp_unslash( $_POST['tst_color_swatch_nonce'] ) ),
+            'tst_color_swatch_save'
+        )
+    ) {
         return;
     }
 

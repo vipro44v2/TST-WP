@@ -11,43 +11,81 @@
   const transitionImage = product.querySelector('[data-tst-gallery-transition]');
   const stage = product.querySelector('.tst-product-gallery__stage');
   const thumbnails = [...product.querySelectorAll('[data-tst-gallery-image]')];
-  const defaultImage = mainImage?.src || '';
-  const colorMap = JSON.parse(product.dataset.tstColorMap || '{}');
+
+  function parseMap(value) {
+    try {
+      const parsed = JSON.parse(value || '{}');
+      return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+    } catch {
+      return {};
+    }
+  }
+
+  const defaultImage = mainImage ? {
+    src: mainImage.src,
+    srcset: mainImage.getAttribute('srcset') || '',
+    alt: mainImage.alt,
+    width: Number(mainImage.getAttribute('width')) || 0,
+    height: Number(mainImage.getAttribute('height')) || 0,
+  } : null;
+  const colorMap = parseMap(product.dataset.tstColorMap);
+  const variationImages = parseMap(product.dataset.tstVariationImages);
   const price = product.querySelector('[data-tst-product-price]');
   const defaultPrice = price?.innerHTML || '';
   let slideTimer = null;
   let slideInProgress = false;
   let pendingSlide = null;
 
-  function resetSlide(source) {
+  function setImage(element, image) {
+    if (!element || !image?.src) {
+      return;
+    }
+
+    element.removeAttribute('srcset');
+    element.src = image.src;
+    element.alt = image.alt || '';
+
+    if (image.srcset) {
+      element.srcset = image.srcset;
+    }
+
+    if (image.width > 0 && image.height > 0) {
+      element.width = image.width;
+      element.height = image.height;
+    } else {
+      element.removeAttribute('width');
+      element.removeAttribute('height');
+    }
+  }
+
+  function resetSlide(image) {
     if (!stage) {
       return;
     }
 
-    if (source && mainImage) {
-      mainImage.src = source;
-    }
+    setImage(mainImage, image);
 
     stage.classList.remove('is-sliding');
     stage.offsetWidth;
   }
 
-  function slideToImage(source, direction = 1) {
-    if (!source || !mainImage) {
+  function slideToImage(image, direction = 1) {
+    if (!image?.src || !mainImage) {
       return;
     }
 
     if (slideInProgress) {
-      pendingSlide = { source, direction };
+      pendingSlide = { image, direction };
       return;
     }
 
-    if (source === mainImage.src) {
+    if (image.src === mainImage.src) {
+      setImage(mainImage, image);
       return;
     }
 
     if (!transitionImage || !stage || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      mainImage.src = source;
+      setImage(mainImage, image);
       return;
     }
 
@@ -55,8 +93,16 @@
     const preload = new Image();
 
     preload.onload = () => {
+      if (pendingSlide) {
+        slideInProgress = false;
+        const next = pendingSlide;
+        pendingSlide = null;
+        slideToImage(next.image, next.direction);
+        return;
+      }
+
       stage.classList.toggle('is-from-left', direction < 0);
-      transitionImage.src = source;
+      setImage(transitionImage, image);
       let finished = false;
 
       const finishSlide = (event) => {
@@ -67,14 +113,14 @@
         finished = true;
         window.clearTimeout(slideTimer);
         transitionImage.removeEventListener('transitionend', finishSlide);
-        resetSlide(source);
+        resetSlide(image);
         slideInProgress = false;
 
         const next = pendingSlide;
         pendingSlide = null;
 
         if (next) {
-          slideToImage(next.source, next.direction);
+          slideToImage(next.image, next.direction);
         }
       };
 
@@ -91,11 +137,15 @@
       pendingSlide = null;
 
       if (next) {
-        slideToImage(next.source, next.direction);
+        slideToImage(next.image, next.direction);
       }
     };
 
-    preload.src = source;
+    if (image.srcset) {
+      preload.srcset = image.srcset;
+    }
+
+    preload.src = image.src;
   }
 
   function showImage(index, direction) {
@@ -106,9 +156,23 @@
     }
 
     const current = thumbnails.findIndex((item) => item.classList.contains('is-active'));
-    slideToImage(thumbnail.dataset.tstGalleryImage, direction || (index < current ? -1 : 1));
+    slideToImage({
+      src: thumbnail.dataset.tstGalleryImage,
+      srcset: thumbnail.dataset.tstGallerySrcset || '',
+      alt: thumbnail.dataset.tstGalleryAlt || '',
+      width: Number(thumbnail.dataset.tstGalleryWidth) || 0,
+      height: Number(thumbnail.dataset.tstGalleryHeight) || 0,
+    }, direction || (index < current ? -1 : 1));
     thumbnails.forEach((item) => {
       const active = item === thumbnail;
+      item.classList.toggle('is-active', active);
+      item.setAttribute('aria-pressed', String(active));
+    });
+  }
+
+  function markMatchingThumbnail(source) {
+    thumbnails.forEach((item) => {
+      const active = item.dataset.tstGalleryImage === source;
       item.classList.toggle('is-active', active);
       item.setAttribute('aria-pressed', String(active));
     });
@@ -332,12 +396,19 @@
         price.innerHTML = variation.price_html;
       }
 
-      if (mainImage && variation?.image?.src) {
-        slideToImage(variation.image.src);
-        thumbnails.forEach((item) => {
-          item.classList.remove('is-active');
-          item.setAttribute('aria-pressed', 'false');
-        });
+      const mappedImage = variationImages[variation?.variation_id];
+      const nativeImage = variation?.image;
+      const variationImage = mappedImage || (nativeImage?.src ? {
+        src: nativeImage.src,
+        srcset: nativeImage.srcset || '',
+        alt: nativeImage.alt || '',
+        width: Number(nativeImage.src_w) || 0,
+        height: Number(nativeImage.src_h) || 0,
+      } : defaultImage);
+
+      if (variationImage?.src) {
+        slideToImage(variationImage);
+        markMatchingThumbnail(variationImage.src);
       }
     });
 
@@ -350,10 +421,9 @@
         price.innerHTML = defaultPrice;
       }
 
-      if (thumbnails.length) {
-        showImage(0);
-      } else {
+      if (defaultImage?.src) {
         slideToImage(defaultImage);
+        markMatchingThumbnail(defaultImage.src);
       }
     });
 

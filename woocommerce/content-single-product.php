@@ -19,10 +19,47 @@ $tst_image_ids = array_values(
         )
     )
 );
-$tst_first_image = $tst_image_ids ? wp_get_attachment_image_url( $tst_image_ids[0], 'large' ) : '';
+$tst_first_image_id = $tst_image_ids[0] ?? 0;
+$tst_first_image_data = $tst_first_image_id ? wp_get_attachment_image_src( $tst_first_image_id, 'large' ) : false;
+$tst_first_image = $tst_first_image_data ? $tst_first_image_data[0] : '';
+$tst_display_image = $tst_first_image ?: ( function_exists( 'wc_placeholder_img_src' ) ? wc_placeholder_img_src( 'woocommerce_single' ) : '' );
+$tst_first_image_srcset = $tst_first_image_id ? wp_get_attachment_image_srcset( $tst_first_image_id, 'large' ) : '';
+$tst_first_image_alt = $tst_first_image_id ? get_post_meta( $tst_first_image_id, '_wp_attachment_image_alt', true ) : '';
+$tst_first_image_alt = $tst_first_image_alt ?: $product->get_name();
 $tst_color_map = array();
+$tst_variation_image_map = array();
 
 if ( $product->is_type( 'variable' ) ) {
+    foreach ( $product->get_available_variations( 'objects' ) as $tst_variation ) {
+        if ( ! $tst_variation instanceof WC_Product_Variation ) {
+            continue;
+        }
+
+        $tst_variation_gallery_ids = $tst_variation->get_gallery_image_ids();
+        $tst_variation_image_id = $tst_variation->get_image_id()
+            ?: ( $tst_variation_gallery_ids[0] ?? $tst_first_image_id );
+
+        if ( ! $tst_variation_image_id ) {
+            continue;
+        }
+
+        $tst_variation_image_data = wp_get_attachment_image_src( $tst_variation_image_id, 'large' );
+
+        if ( ! $tst_variation_image_data ) {
+            continue;
+        }
+
+        $tst_variation_image_alt = get_post_meta( $tst_variation_image_id, '_wp_attachment_image_alt', true );
+        $tst_variation_image_map[ $tst_variation->get_id() ] = array(
+            'id'     => $tst_variation->get_id(),
+            'src'    => esc_url_raw( $tst_variation_image_data[0] ),
+            'srcset' => wp_get_attachment_image_srcset( $tst_variation_image_id, 'large' ) ?: '',
+            'alt'    => sanitize_text_field( $tst_variation_image_alt ?: $tst_variation->get_name() ),
+            'width'  => absint( $tst_variation_image_data[1] ),
+            'height' => absint( $tst_variation_image_data[2] ),
+        );
+    }
+
     foreach ( $product->get_variation_attributes() as $tst_attribute => $tst_values ) {
         if ( 'color' !== tst_product_attribute_kind( $tst_attribute ) ) {
             continue;
@@ -46,16 +83,33 @@ if ( function_exists( 'woocommerce_breadcrumb' ) ) {
     );
 }
 ?>
-<article class="tst-product-layout" data-tst-single-product data-tst-color-map="<?php echo esc_attr( wp_json_encode( $tst_color_map ) ); ?>">
+<article
+  class="tst-product-layout"
+  data-tst-single-product
+  data-tst-color-map="<?php echo esc_attr( wp_json_encode( $tst_color_map ) ); ?>"
+  data-tst-variation-images="<?php echo esc_attr( wp_json_encode( $tst_variation_image_map, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ) ); ?>"
+>
   <div class="tst-product-gallery<?php echo count( $tst_image_ids ) < 2 ? ' tst-product-gallery--single' : ''; ?>" data-tst-product-gallery>
     <?php if ( count( $tst_image_ids ) > 1 ) : ?>
       <div class="tst-product-gallery__thumbnails" aria-label="<?php esc_attr_e( 'Ảnh sản phẩm', 'tst-custom' ); ?>">
         <?php foreach ( $tst_image_ids as $tst_index => $tst_image_id ) : ?>
-          <?php $tst_large_image = wp_get_attachment_image_url( $tst_image_id, 'large' ); ?>
+          <?php
+          $tst_gallery_image_data = wp_get_attachment_image_src( $tst_image_id, 'large' );
+
+          if ( ! $tst_gallery_image_data ) {
+              continue;
+          }
+
+          $tst_gallery_image_alt = get_post_meta( $tst_image_id, '_wp_attachment_image_alt', true );
+          ?>
           <button
             class="tst-product-gallery__thumbnail<?php echo 0 === $tst_index ? ' is-active' : ''; ?>"
             type="button"
-            data-tst-gallery-image="<?php echo esc_url( $tst_large_image ); ?>"
+            data-tst-gallery-image="<?php echo esc_url( $tst_gallery_image_data[0] ); ?>"
+            data-tst-gallery-srcset="<?php echo esc_attr( wp_get_attachment_image_srcset( $tst_image_id, 'large' ) ?: '' ); ?>"
+            data-tst-gallery-alt="<?php echo esc_attr( $tst_gallery_image_alt ?: $product->get_name() ); ?>"
+            data-tst-gallery-width="<?php echo esc_attr( $tst_gallery_image_data[1] ); ?>"
+            data-tst-gallery-height="<?php echo esc_attr( $tst_gallery_image_data[2] ); ?>"
             aria-label="<?php echo esc_attr( sprintf( __( 'Xem ảnh %d', 'tst-custom' ), $tst_index + 1 ) ); ?>"
             aria-pressed="<?php echo 0 === $tst_index ? 'true' : 'false'; ?>"
           >
@@ -66,11 +120,13 @@ if ( function_exists( 'woocommerce_breadcrumb' ) ) {
     <?php endif; ?>
 
     <div class="tst-product-gallery__stage">
-      <?php if ( $tst_first_image ) : ?>
+      <?php if ( $tst_display_image ) : ?>
         <img
           class="tst-product-gallery__main-image"
-          src="<?php echo esc_url( $tst_first_image ); ?>"
-          alt="<?php echo esc_attr( $product->get_name() ); ?>"
+          src="<?php echo esc_url( $tst_display_image ); ?>"
+          <?php if ( $tst_first_image_srcset ) : ?>srcset="<?php echo esc_attr( $tst_first_image_srcset ); ?>"<?php endif; ?>
+          alt="<?php echo esc_attr( $tst_first_image_alt ); ?>"
+          <?php if ( $tst_first_image_data ) : ?>width="<?php echo esc_attr( $tst_first_image_data[1] ); ?>" height="<?php echo esc_attr( $tst_first_image_data[2] ); ?>"<?php endif; ?>
           data-tst-gallery-main
         >
         <img
