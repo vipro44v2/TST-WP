@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'TST_VERSION', '1.0.0' );
+define( 'TST_VERSION', '1.0.1' );
 define( 'TST_DIR', get_template_directory() );
 define( 'TST_URI', get_template_directory_uri() );
 

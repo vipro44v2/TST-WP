@@ -183,10 +183,6 @@
   font-size: 13px;
 }
 
-.tst-footer__widgets {
-  grid-column: 2 / -1;
-}
-
 .tst-footer__bottom {
   border-top: 1px solid #e9e9ec;
 }
@@ -257,8 +253,7 @@
     grid-column: 1 / -1;
   }
 
-  .tst-footer__information,
-  .tst-footer__widgets {
+  .tst-footer__information {
     grid-column: 1 / -1;
   }
 

@@ -191,11 +191,13 @@ function tst_enqueue_assets() {
     }
 
     if ( $tst_is_product_page || ( is_front_page() && tst_home_has_block_type( 'newsletter' ) ) ) {
+        $tst_newsletter_style_path = TST_DIR . '/assets/css/components/newsletter.css';
+
         wp_enqueue_style(
             'tst-newsletter',
             TST_URI . '/assets/css/components/newsletter.css',
             array( 'tst-style' ),
-            TST_VERSION
+            (string) filemtime( $tst_newsletter_style_path )
         );
     }
 

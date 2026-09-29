@@ -7,10 +7,27 @@
 }
 
 .tst-header {
-  position: relative;
+  position: sticky;
   z-index: 30;
+  top: 0;
   background: #ac0e23;
   color: #fff;
+}
+
+.admin-bar .tst-header {
+  top: 32px;
+}
+
+@media (max-width: 782px) {
+  .admin-bar .tst-header {
+    top: 46px;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-bar .tst-header {
+    top: 0;
+  }
 }
 
 .tst-header__inner {

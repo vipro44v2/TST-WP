@@ -158,11 +158,6 @@ $tst_newsletter_messages = array(
         <?php endif; ?>
       </div>
     </div>
-    <?php if ( is_active_sidebar( 'footer' ) ) : ?>
-      <div class="tst-footer__widgets">
-        <?php dynamic_sidebar( 'footer' ); ?>
-      </div>
-    <?php endif; ?>
   </div>
   <div class="tst-footer__bottom">
     <div class="tst-footer__bottom-inner">

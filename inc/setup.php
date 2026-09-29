@@ -200,15 +200,3 @@ function tst_footer_fallback_menu( $location ) {
 
     echo '</ul>';
 }
-
-function tst_widgets_init() {
-    register_sidebar(
-        array(
-            'name'          => __( 'Footer', 'tst-custom' ),
-            'id'            => 'footer',
-            'before_widget' => '<div class="tst-footer__widget">',
-            'after_widget'  => '</div>',
-        )
-    );
-}
-add_action( 'widgets_init', 'tst_widgets_init' );

@@ -52,21 +52,29 @@
   min-width: 0;
 }
 
-.tst-newsletter__input {
+.tst-newsletter__form input[type="email"] {
   display: block;
   width: 100%;
+  min-width: 0;
   padding: 12px 4px 12px 20px;
   border: 0;
+  border-radius: 0;
   background: transparent;
   color: #fff;
   font: inherit;
   font-size: 15px;
   outline: 0;
+  box-shadow: none;
 }
 
-.tst-newsletter__input::placeholder {
+.tst-newsletter__form input[type="email"]::placeholder {
   color: #fff;
   opacity: 1;
+}
+
+.tst-newsletter__form input[type="email"]:-webkit-autofill {
+  -webkit-text-fill-color: #fff;
+  box-shadow: 0 0 0 1000px #ad1024 inset;
 }
 
 .tst-newsletter__form:focus-within {
