@@ -6,8 +6,3 @@ Description: A custom, WooCommerce-ready storefront theme.
 Version: 1.0.0
 Text Domain: tst-custom
 */
-@import url("assets/css/base.css");
-@import url("assets/css/components.css");
-@import url("assets/css/header.css?v=1.0.1");
-@import url("assets/css/checkout.css");
-@import url("assets/css/footer.css");

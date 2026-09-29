@@ -39,7 +39,10 @@ $first_color = $quick_color_labels[0] ?? ( $colors ? array_key_first( $colors ) 
 $gallery_ids = $product->get_gallery_image_ids();
 $hover_image_id = $gallery_ids[0] ?? 0;
 ?>
-<article class="tst-product-card" data-tst-product-card>
+<article
+  class="tst-product-card<?php echo $product->is_in_stock() ? '' : ' tst-product-card--sold-out'; ?>"
+  data-tst-product-card
+>
   <div class="tst-product-card__media">
     <a class="tst-product-card__image-link" href="<?php echo esc_url( $product->get_permalink() ); ?>">
       <?php echo wp_kses_post( $product->get_image( 'woocommerce_thumbnail' ) ); ?>
@@ -60,8 +63,12 @@ $hover_image_id = $gallery_ids[0] ?? 0;
         ?>
       <?php endif; ?>
     </a>
-    <?php if ( $product->is_on_sale() && ( ! isset( $options['show_badges'] ) || $options['show_badges'] ) ) : ?>
-      <span class="tst-badge"><?php esc_html_e( 'Sale', 'tst-custom' ); ?></span>
+    <?php if ( ! isset( $options['show_badges'] ) || $options['show_badges'] ) : ?>
+      <?php if ( ! $product->is_in_stock() ) : ?>
+        <span class="tst-badge tst-badge--sold-out"><?php esc_html_e( 'Hết hàng', 'tst-custom' ); ?></span>
+      <?php elseif ( $product->is_on_sale() ) : ?>
+        <span class="tst-badge"><?php esc_html_e( 'Sale', 'tst-custom' ); ?></span>
+      <?php endif; ?>
     <?php endif; ?>
     <?php if ( $quick_variations ) : ?>
       <div class="tst-product-card__size-panel" data-tst-size-panel>

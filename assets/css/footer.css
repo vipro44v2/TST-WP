@@ -33,9 +33,9 @@
   place-items: center;
   width: 64px;
   height: 64px;
-  border: 6px solid #b51225;
+  border: 6px solid var(--tst-color-primary);
   border-radius: 50%;
-  color: #b51225;
+  color: var(--tst-color-primary);
   font-size: 21px;
   font-weight: 700;
   letter-spacing: -0.08em;
@@ -70,7 +70,7 @@
 
 .tst-footer__menu a:hover,
 .tst-footer__menu a:focus-visible {
-  color: #b51225;
+  color: var(--tst-color-primary);
   text-decoration: underline;
 }
 

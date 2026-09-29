@@ -103,8 +103,31 @@ get_header( 'shop' );
     <?php do_action( 'woocommerce_archive_description' ); ?>
   </header>
 
+  <button
+    class="tst-collection__filter-toggle"
+    type="button"
+    aria-controls="tst-collection-filters"
+    aria-expanded="false"
+    data-tst-filter-open
+  >
+    <?php esc_html_e( 'Bộ lọc', 'tst-custom' ); ?>
+    <?php if ( $tst_active_filters ) : ?>
+      <span><?php echo esc_html( count( $tst_active_filters ) ); ?></span>
+    <?php endif; ?>
+  </button>
+  <button
+    class="tst-collection__filter-overlay"
+    type="button"
+    aria-label="<?php esc_attr_e( 'Đóng bộ lọc', 'tst-custom' ); ?>"
+    data-tst-filter-close
+  ></button>
+
   <div class="tst-collection__layout">
-    <aside class="tst-collection__filters" aria-label="<?php esc_attr_e( 'Bộ lọc sản phẩm', 'tst-custom' ); ?>">
+    <aside id="tst-collection-filters" class="tst-collection__filters" aria-label="<?php esc_attr_e( 'Bộ lọc sản phẩm', 'tst-custom' ); ?>">
+      <div class="tst-collection__filter-mobile-header">
+        <strong><?php esc_html_e( 'Bộ lọc', 'tst-custom' ); ?></strong>
+        <button type="button" aria-label="<?php esc_attr_e( 'Đóng bộ lọc', 'tst-custom' ); ?>" data-tst-filter-close>×</button>
+      </div>
       <div class="tst-collection__active">
         <div class="tst-collection__active-heading">
           <h2>
@@ -203,6 +226,10 @@ get_header( 'shop' );
           </details>
         <?php endforeach; ?>
 
+        <div class="tst-collection__filter-actions">
+          <a href="<?php echo esc_url( $tst_clear_url ); ?>"><?php esc_html_e( 'Xóa hết', 'tst-custom' ); ?></a>
+          <button type="submit"><?php esc_html_e( 'Áp dụng', 'tst-custom' ); ?></button>
+        </div>
       </form>
     </aside>
 

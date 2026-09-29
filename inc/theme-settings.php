@@ -24,6 +24,28 @@ function tst_settings_init() {
 }
 add_action( 'admin_init', 'tst_settings_init' );
 
+function tst_product_service_defaults() {
+    return array(
+        'product_shipping_message' => __( 'Giao Hàng Hỏa Tốc 4H (nội thành TP.HCM và Hà Nội)', 'tst-custom' ),
+        'product_hotline_message'  => __(
+            '(Miễn phí cước gọi) - Hotline đặt hàng (08h30 - 21h30)',
+            'tst-custom'
+        ),
+        'product_warranty_message' => __( 'Bảo hành trong suốt thời gian sử dụng do lỗi kỹ thuật', 'tst-custom' ),
+        'product_return_message'   => __( 'Đổi sản phẩm trong 7 ngày', 'tst-custom' ),
+        'product_shipping_details' => __( 'Giao hàng hỏa tốc 4H tại khu vực nội thành TP.HCM và Hà Nội.', 'tst-custom' ),
+        'product_warranty_details' => __( 'Bảo hành trong suốt thời gian sử dụng đối với lỗi kỹ thuật.', 'tst-custom' ),
+        'product_return_details'   => __( 'Đổi sản phẩm trong 7 ngày.', 'tst-custom' ),
+    );
+}
+
+function tst_product_service_setting( $key ) {
+    $defaults = tst_product_service_defaults();
+    $value = tst_get_setting( $key, '' );
+
+    return is_string( $value ) && '' !== trim( $value ) ? $value : ( $defaults[ $key ] ?? '' );
+}
+
 function tst_sanitize_settings( $input ) {
     $existing = get_option( 'tst_settings', array() );
     $out = is_array( $existing ) ? $existing : array();
@@ -72,6 +94,12 @@ function tst_sanitize_settings( $input ) {
         $out[ $key ] = is_string( $value ) ? esc_url_raw( wp_unslash( $value ) ) : '';
     }
 
+    foreach ( tst_product_service_defaults() as $key => $default ) {
+        if ( array_key_exists( $key, $input ) ) {
+            $out[ $key ] = is_string( $input[ $key ] ) ? sanitize_textarea_field( $input[ $key ] ) : '';
+        }
+    }
+
     return $out;
 }
 
@@ -97,6 +125,15 @@ function tst_settings_page() {
     );
     $checkbox_fields = array(
         'sticky_header' => __( 'Sticky header', 'tst-custom' ),
+    );
+    $service_labels = array(
+        'product_shipping_message' => __( 'Giao hàng — dịch vụ', 'tst-custom' ),
+        'product_hotline_message'  => __( 'Hotline — giờ hỗ trợ', 'tst-custom' ),
+        'product_warranty_message' => __( 'Bảo hành — dịch vụ', 'tst-custom' ),
+        'product_return_message'   => __( 'Đổi trả — dịch vụ', 'tst-custom' ),
+        'product_shipping_details' => __( 'Giao hàng — accordion', 'tst-custom' ),
+        'product_warranty_details' => __( 'Bảo hành — accordion', 'tst-custom' ),
+        'product_return_details'   => __( 'Đổi trả — accordion', 'tst-custom' ),
     );
     $footer_fields = array(
         'footer_menu_1_heading'   => __( 'Tiêu đề cột menu 1', 'tst-custom' ),
@@ -160,6 +197,28 @@ function tst_settings_page() {
                   value="1"
                   <?php checked( $settings[ $key ] ?? 0, 1 ); ?>
                 >
+              </td>
+            </tr>
+          <?php endforeach; ?>
+        </table>
+        <h2><?php esc_html_e( 'Thông tin dịch vụ sản phẩm', 'tst-custom' ); ?></h2>
+        <p><?php esc_html_e( 'Số hotline dùng mục Support phone ở trên. Để trống để dùng nội dung mặc định.', 'tst-custom' ); ?></p>
+        <table class="form-table">
+          <?php foreach ( tst_product_service_defaults() as $key => $default ) : ?>
+            <tr>
+              <th>
+                <label for="tst_<?php echo esc_attr( $key ); ?>">
+                  <?php echo esc_html( $service_labels[ $key ] ); ?>
+                </label>
+              </th>
+              <td>
+                <textarea
+                  class="large-text"
+                  id="tst_<?php echo esc_attr( $key ); ?>"
+                  name="tst_settings[<?php echo esc_attr( $key ); ?>]"
+                  rows="2"
+                  placeholder="<?php echo esc_attr( $default ); ?>"
+                ><?php echo esc_textarea( $settings[ $key ] ?? '' ); ?></textarea>
               </td>
             </tr>
           <?php endforeach; ?>

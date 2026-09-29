@@ -12,6 +12,13 @@ if ( ! $product instanceof WC_Product ) {
     return;
 }
 
+$tst_support_phone = tst_get_setting( 'support_phone', '18009029' );
+
+if ( ! is_string( $tst_support_phone ) || '' === trim( $tst_support_phone ) ) {
+    $tst_support_phone = '18009029';
+}
+
+$tst_support_phone_href = preg_replace( '/[^0-9+]/', '', $tst_support_phone );
 $tst_image_ids = array_values(
     array_filter(
         array_unique(
@@ -217,7 +224,7 @@ if ( function_exists( 'woocommerce_breadcrumb' ) ) {
             <circle cx="18" cy="18" r="2" stroke="currentColor" stroke-width="1.5" />
           </svg>
         </span>
-        <span><?php esc_html_e( 'Giao Hàng Hỏa Tốc 4H (nội thành TP.HCM và Hà Nội)', 'tst-custom' ); ?></span>
+        <span><?php echo esc_html( tst_product_service_setting( 'product_shipping_message' ) ); ?></span>
       </div>
       <div class="tst-product-info__service">
         <span class="tst-product-info__service-icon" aria-hidden="true">
@@ -226,8 +233,10 @@ if ( function_exists( 'woocommerce_breadcrumb' ) ) {
           </svg>
         </span>
         <span>
-          <a href="tel:18009029">18009029</a>
-          <?php esc_html_e( '(Miễn phí cước gọi) - Hotline đặt hàng (08h30 - 21h30)', 'tst-custom' ); ?>
+          <a href="<?php echo esc_url( 'tel:' . $tst_support_phone_href ); ?>">
+            <?php echo esc_html( $tst_support_phone ); ?>
+          </a>
+          <?php echo esc_html( tst_product_service_setting( 'product_hotline_message' ) ); ?>
         </span>
       </div>
       <div class="tst-product-info__service">
@@ -247,7 +256,7 @@ if ( function_exists( 'woocommerce_breadcrumb' ) ) {
             <path d="m8 12 3 3 5-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </span>
-        <span><?php esc_html_e( 'Bảo hành trong suốt thời gian sử dụng do lỗi kỹ thuật', 'tst-custom' ); ?></span>
+        <span><?php echo esc_html( tst_product_service_setting( 'product_warranty_message' ) ); ?></span>
       </div>
       <div class="tst-product-info__service">
         <span class="tst-product-info__service-icon" aria-hidden="true">
@@ -256,7 +265,7 @@ if ( function_exists( 'woocommerce_breadcrumb' ) ) {
             <path d="M20 4v5h-5M4 20v-5h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </span>
-        <span><?php esc_html_e( 'Đổi sản phẩm trong 7 ngày', 'tst-custom' ); ?></span>
+        <span><?php echo esc_html( tst_product_service_setting( 'product_return_message' ) ); ?></span>
       </div>
     </div>
 
@@ -302,14 +311,14 @@ if ( function_exists( 'woocommerce_breadcrumb' ) ) {
       <details class="tst-product-info__accordion-item">
         <summary><?php esc_html_e( 'Bảo Hành & Đổi', 'tst-custom' ); ?></summary>
         <div class="tst-product-info__accordion-content">
-          <p><?php esc_html_e( 'Bảo hành trong suốt thời gian sử dụng đối với lỗi kỹ thuật.', 'tst-custom' ); ?></p>
-          <p><?php esc_html_e( 'Đổi sản phẩm trong 7 ngày.', 'tst-custom' ); ?></p>
+          <p><?php echo esc_html( tst_product_service_setting( 'product_warranty_details' ) ); ?></p>
+          <p><?php echo esc_html( tst_product_service_setting( 'product_return_details' ) ); ?></p>
         </div>
       </details>
       <details class="tst-product-info__accordion-item">
         <summary><?php esc_html_e( 'Thông Tin Giao Nhận', 'tst-custom' ); ?></summary>
         <div class="tst-product-info__accordion-content">
-          <p><?php esc_html_e( 'Giao hàng hỏa tốc 4H tại khu vực nội thành TP.HCM và Hà Nội.', 'tst-custom' ); ?></p>
+          <p><?php echo esc_html( tst_product_service_setting( 'product_shipping_details' ) ); ?></p>
           <p><?php esc_html_e( 'Phí vận chuyển được tính khi thanh toán.', 'tst-custom' ); ?></p>
         </div>
       </details>

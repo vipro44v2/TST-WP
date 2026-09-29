@@ -4,9 +4,34 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+function tst_asset_version( $relative_path ) {
+    $path = TST_DIR . '/' . ltrim( $relative_path, '/' );
+
+    return is_file( $path ) ? (string) filemtime( $path ) : TST_VERSION;
+}
+
 function tst_enqueue_assets() {
-    wp_enqueue_style( 'tst-style', get_stylesheet_uri(), array(), TST_VERSION );
-    wp_enqueue_script( 'tst-main', TST_URI . '/assets/js/main.js', array(), TST_VERSION, true );
+    wp_enqueue_style( 'tst-style', get_stylesheet_uri(), array(), tst_asset_version( 'style.css' ) );
+    $core_styles = array( 'base', 'components', 'header', 'checkout', 'footer' );
+    $previous_handle = 'tst-style';
+
+    foreach ( $core_styles as $name ) {
+        wp_enqueue_style(
+            'tst-' . $name,
+            TST_URI . '/assets/css/' . $name . '.css',
+            array( $previous_handle ),
+            tst_asset_version( 'assets/css/' . $name . '.css' )
+        );
+        $previous_handle = 'tst-' . $name;
+    }
+
+    wp_enqueue_script(
+        'tst-main',
+        TST_URI . '/assets/js/main.js',
+        array(),
+        tst_asset_version( 'assets/js/main.js' ),
+        true
+    );
     $tst_is_product_page = class_exists( 'WooCommerce' ) && is_product();
     $tst_is_cart_page = class_exists( 'WooCommerce' ) && function_exists( 'is_cart' ) && is_cart();
     $tst_is_checkout_page = class_exists( 'WooCommerce' ) && function_exists( 'is_checkout' ) && is_checkout();
@@ -16,13 +41,13 @@ function tst_enqueue_assets() {
             'tst-account',
             TST_URI . '/assets/css/account.css',
             array( 'tst-style' ),
-            (string) filemtime( TST_DIR . '/assets/css/account.css' )
+            tst_asset_version( 'assets/css/account.css' )
         );
         wp_enqueue_script(
             'tst-account',
             TST_URI . '/assets/js/account.js',
             array(),
-            (string) filemtime( TST_DIR . '/assets/js/account.js' ),
+            tst_asset_version( 'assets/js/account.js' ),
             true
         );
     }
@@ -32,7 +57,7 @@ function tst_enqueue_assets() {
             'tst-checkout-page',
             TST_URI . '/assets/css/checkout-page.css',
             array( 'tst-style' ),
-            (string) filemtime( TST_DIR . '/assets/css/checkout-page.css' )
+            tst_asset_version( 'assets/css/checkout-page.css' )
         );
     }
 
@@ -41,13 +66,13 @@ function tst_enqueue_assets() {
             'tst-cart-page',
             TST_URI . '/assets/css/cart.css',
             array( 'tst-style' ),
-            (string) filemtime( TST_DIR . '/assets/css/cart.css' )
+            tst_asset_version( 'assets/css/cart.css' )
         );
         wp_enqueue_script(
             'tst-cart-page',
             TST_URI . '/assets/js/cart-page.js',
             array(),
-            (string) filemtime( TST_DIR . '/assets/js/cart-page.js' ),
+            tst_asset_version( 'assets/js/cart-page.js' ),
             true
         );
     }
@@ -57,38 +82,36 @@ function tst_enqueue_assets() {
             'tst-reveal',
             TST_URI . '/assets/css/reveal.css',
             array( 'tst-style' ),
-            (string) filemtime( TST_DIR . '/assets/css/reveal.css' )
+            tst_asset_version( 'assets/css/reveal.css' )
         );
         wp_enqueue_script(
             'tst-reveal',
             TST_URI . '/assets/js/reveal.js',
             array(),
-            (string) filemtime( TST_DIR . '/assets/js/reveal.js' ),
+            tst_asset_version( 'assets/js/reveal.js' ),
             true
         );
     }
 
     if ( $tst_is_product_page || $tst_is_cart_page ) {
-        $product_style = TST_DIR . '/assets/css/product.css';
-
         wp_enqueue_style(
             'tst-single-product',
             TST_URI . '/assets/css/product.css',
             array( 'tst-style' ),
-            (string) filemtime( $product_style )
+            tst_asset_version( 'assets/css/product.css' )
         );
         wp_enqueue_script(
             'tst-related-products',
             TST_URI . '/assets/js/related-products.js',
             array(),
-            (string) filemtime( TST_DIR . '/assets/js/related-products.js' ),
+            tst_asset_version( 'assets/js/related-products.js' ),
             true
         );
         wp_enqueue_script(
             'tst-product-quick-select',
             TST_URI . '/assets/js/components/product-quick-select.js',
             array(),
-            TST_VERSION,
+            tst_asset_version( 'assets/js/components/product-quick-select.js' ),
             true
         );
     }
@@ -98,33 +121,30 @@ function tst_enqueue_assets() {
             'tst-single-product',
             TST_URI . '/assets/js/single-product.js',
             array( 'jquery' ),
-            (string) filemtime( TST_DIR . '/assets/js/single-product.js' ),
+            tst_asset_version( 'assets/js/single-product.js' ),
             true
         );
     }
 
     if ( class_exists( 'WooCommerce' ) && ( is_shop() || is_product_taxonomy() ) ) {
-        $collection_script = TST_DIR . '/assets/js/collection.js';
-        $collection_style = TST_DIR . '/assets/css/collection.css';
-
         wp_enqueue_script(
             'tst-collection',
             TST_URI . '/assets/js/collection.js',
             array(),
-            (string) filemtime( $collection_script ),
+            tst_asset_version( 'assets/js/collection.js' ),
             true
         );
         wp_enqueue_style(
             'tst-collection',
             TST_URI . '/assets/css/collection.css',
             array( 'tst-style' ),
-            (string) filemtime( $collection_style )
+            tst_asset_version( 'assets/css/collection.css' )
         );
         wp_enqueue_script(
             'tst-product-quick-select',
             TST_URI . '/assets/js/components/product-quick-select.js',
             array(),
-            TST_VERSION,
+            tst_asset_version( 'assets/js/components/product-quick-select.js' ),
             true
         );
     }
@@ -134,13 +154,13 @@ function tst_enqueue_assets() {
             'tst-hero-carousel',
             TST_URI . '/assets/css/components/hero-carousel.css',
             array( 'tst-style' ),
-            TST_VERSION
+            tst_asset_version( 'assets/css/components/hero-carousel.css' )
         );
         wp_enqueue_script(
             'tst-hero-carousel',
             TST_URI . '/assets/js/components/hero-carousel.js',
             array(),
-            TST_VERSION,
+            tst_asset_version( 'assets/js/components/hero-carousel.js' ),
             true
         );
     }
@@ -150,7 +170,7 @@ function tst_enqueue_assets() {
             'tst-lifestyle-banner',
             TST_URI . '/assets/css/components/lifestyle-banner.css',
             array( 'tst-style' ),
-            TST_VERSION
+            tst_asset_version( 'assets/css/components/lifestyle-banner.css' )
         );
     }
 
@@ -159,7 +179,7 @@ function tst_enqueue_assets() {
             'tst-craft-story',
             TST_URI . '/assets/css/components/craft-story.css',
             array( 'tst-style' ),
-            TST_VERSION
+            tst_asset_version( 'assets/css/components/craft-story.css' )
         );
     }
 
@@ -168,7 +188,7 @@ function tst_enqueue_assets() {
             'tst-business-customers',
             TST_URI . '/assets/css/components/business-customers.css',
             array( 'tst-style' ),
-            TST_VERSION
+            tst_asset_version( 'assets/css/components/business-customers.css' )
         );
     }
 
@@ -177,7 +197,7 @@ function tst_enqueue_assets() {
             'tst-promo-pair',
             TST_URI . '/assets/css/components/promo-pair.css',
             array( 'tst-style' ),
-            TST_VERSION
+            tst_asset_version( 'assets/css/components/promo-pair.css' )
         );
     }
 
@@ -186,18 +206,16 @@ function tst_enqueue_assets() {
             'tst-category-grid',
             TST_URI . '/assets/css/components/category-grid.css',
             array( 'tst-style' ),
-            TST_VERSION
+            tst_asset_version( 'assets/css/components/category-grid.css' )
         );
     }
 
     if ( $tst_is_product_page || ( is_front_page() && tst_home_has_block_type( 'newsletter' ) ) ) {
-        $tst_newsletter_style_path = TST_DIR . '/assets/css/components/newsletter.css';
-
         wp_enqueue_style(
             'tst-newsletter',
             TST_URI . '/assets/css/components/newsletter.css',
             array( 'tst-style' ),
-            (string) filemtime( $tst_newsletter_style_path )
+            tst_asset_version( 'assets/css/components/newsletter.css' )
         );
     }
 
@@ -206,7 +224,7 @@ function tst_enqueue_assets() {
             'tst-contact-feedback',
             TST_URI . '/assets/css/components/contact-feedback.css',
             array( 'tst-style' ),
-            TST_VERSION
+            tst_asset_version( 'assets/css/components/contact-feedback.css' )
         );
     }
 
@@ -215,13 +233,13 @@ function tst_enqueue_assets() {
             'tst-product-tabs-slider',
             TST_URI . '/assets/css/components/product-tabs-slider.css',
             array( 'tst-style' ),
-            TST_VERSION
+            tst_asset_version( 'assets/css/components/product-tabs-slider.css' )
         );
         wp_enqueue_script(
             'tst-product-tabs-slider',
             TST_URI . '/assets/js/components/product-tabs-slider.js',
             array(),
-            TST_VERSION,
+            tst_asset_version( 'assets/js/components/product-tabs-slider.js' ),
             true
         );
     }
@@ -235,22 +253,17 @@ function tst_enqueue_assets() {
             'tst-product-quick-select',
             TST_URI . '/assets/js/components/product-quick-select.js',
             array(),
-            TST_VERSION,
+            tst_asset_version( 'assets/js/components/product-quick-select.js' ),
             true
         );
     }
 
     if ( class_exists( 'WooCommerce' ) ) {
-        $cart_script_path = TST_DIR . '/assets/js/cart.js';
-        $cart_script_version = file_exists( $cart_script_path )
-            ? (string) filemtime( $cart_script_path )
-            : TST_VERSION;
-
         wp_enqueue_script(
             'tst-cart',
             TST_URI . '/assets/js/cart.js',
             array(),
-            $cart_script_version,
+            tst_asset_version( 'assets/js/cart.js' ),
             true
         );
         wp_localize_script(
@@ -263,16 +276,11 @@ function tst_enqueue_assets() {
         );
 
         if ( function_exists( 'tst_cart_drawer_enabled' ) && tst_cart_drawer_enabled() ) {
-            $cart_style_path = TST_DIR . '/assets/css/cart-drawer.css';
-            $cart_style_version = file_exists( $cart_style_path )
-                ? (string) filemtime( $cart_style_path )
-                : TST_VERSION;
-
             wp_enqueue_style(
                 'tst-cart-drawer',
                 TST_URI . '/assets/css/cart-drawer.css',
                 array( 'tst-style' ),
-                $cart_style_version
+                tst_asset_version( 'assets/css/cart-drawer.css' )
             );
         }
     }

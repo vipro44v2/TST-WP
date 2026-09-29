@@ -5,6 +5,22 @@
   const nav = document.querySelector('.tst-header__nav');
   const searchToggle = document.querySelector('[data-tst-search-toggle]');
   const searchPanel = document.querySelector('#tst-header-search');
+  const header = document.querySelector('.tst-header');
+  let scrolled = null;
+
+  function updateHeader() {
+    const next = window.scrollY > 24;
+
+    if (next === scrolled) {
+      return;
+    }
+
+    scrolled = next;
+    header?.classList.toggle('is-scrolled', next);
+  }
+
+  updateHeader();
+  window.addEventListener('scroll', updateHeader, { passive: true });
 
   function closeMenu() {
     if (!menuToggle || !nav) {
